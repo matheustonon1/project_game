@@ -45,7 +45,7 @@ function love.load()
     love.window.setMode(800, 600)
 
     fontStart = love.graphics.newFont("assets/font/start.ttf", 24)
-    fontMenus = love.graphics.newFont("assets/font/menus.ttf", 48) 
+    fontMenus = love.graphics.newFont("assets/font/menus.ttf", 48 ) 
 
     dojoSprite = love.graphics.newImage("assets/backgrounds/dojoBackground.jpg")
     dojoMenuSprite = love.graphics.newImage("assets/backgrounds/kk-start.jpg")
@@ -173,7 +173,6 @@ function love.draw()
     if gameState == "menu" then
         love.graphics.draw(dojoMenuSprite, 0, 0)
         love.graphics.setFont(love.graphics.newFont(48))
-        love.graphics.
         love.graphics.printf("Ninja Arcade", 0, 200, 800, "center")
         love.graphics.setFont(fontStart)
         love.graphics.printf("PRESS ENTER TO START", 0, 300, 800, "center")
