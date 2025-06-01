@@ -2,7 +2,7 @@ local Enemy = {}
 Enemy.__index = Enemy
 
 -- Carrega o sprite sheet e cria os quadros (quads)
-local spriteSheet = love.graphics.newImage("assets/enemy.png")
+local spriteSheet = love.graphics.newImage("assets/sprites/enemy.png")
 local quads = {
     down = {
         love.graphics.newQuad(0, 0, 32, 32, spriteSheet:getDimensions()),
@@ -91,7 +91,7 @@ function Enemy:pushPlayer(player)
     end
 
     local nx, ny = dx / distance, dy / distance
-    local knockbackStrength = 10000
+    local knockbackStrength = 13000
     player.x = player.x + nx * knockbackStrength * love.timer.getDelta()
     player.y = player.y + ny * knockbackStrength * love.timer.getDelta()
 end

@@ -2,8 +2,8 @@ local Food = {}
 Food.__index = Food
 
 -- Carrega os spritesheets
-local goodSpriteSheet = love.graphics.newImage("assets/foods.png")
-local badSpriteSheet = love.graphics.newImage("assets/badfoods.png")
+local goodSpriteSheet = love.graphics.newImage("assets/sprites/foods.png")
+local badSpriteSheet = love.graphics.newImage("assets/sprites/badfoods.png")
 
 local goodQuads = {}
 local badQuads = {}

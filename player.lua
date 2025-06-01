@@ -7,7 +7,7 @@ function Player.new(x, y)
     self.y = y
     self.size = 18
     self.speed = 200
-    self.spriteSheet = love.graphics.newImage("assets/player.png")
+    self.spriteSheet = love.graphics.newImage("assets/sprites/player.png")
     self.quads = {}
     self.currentFrame = 0
     self.animationTimer = 0

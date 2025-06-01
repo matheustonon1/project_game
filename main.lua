@@ -41,11 +41,15 @@ function resetGame()
 end
 
 function love.load()
-    love.window.setTitle("Ninja Arcade")
+    love.window.setTitle("Kitchen Kunai")
     love.window.setMode(800, 600)
-    dojoSprite = love.graphics.newImage("assets/dojo.png")
-    dojoMenuSprite = love.graphics.newImage("assets/dojoMenu.png")
-    dojoEndSprite = love.graphics.newImage("assets/dojoEnd.png")
+
+    fontStart = love.graphics.newFont("assets/font/start.ttf", 24)
+    fontMenus = love.graphics.newFont("assets/font/menus.ttf", 48) 
+
+    dojoSprite = love.graphics.newImage("assets/backgrounds/dojoBackground.jpg")
+    dojoMenuSprite = love.graphics.newImage("assets/backgrounds/kk-start.jpg")
+    dojoEndSprite = love.graphics.newImage("assets/backgrounds/kk-go.jpg")
 end
 
 function love.keypressed(key)
@@ -169,9 +173,10 @@ function love.draw()
     if gameState == "menu" then
         love.graphics.draw(dojoMenuSprite, 0, 0)
         love.graphics.setFont(love.graphics.newFont(48))
+        love.graphics.
         love.graphics.printf("Ninja Arcade", 0, 200, 800, "center")
-        love.graphics.setFont(love.graphics.newFont(20))
-        love.graphics.printf("Pressione ENTER para começar", 0, 300, 800, "center")
+        love.graphics.setFont(fontStart)
+        love.graphics.printf("PRESS ENTER TO START", 0, 300, 800, "center")
         return
     end
 
@@ -212,7 +217,7 @@ function love.draw()
         love.graphics.setColor(1, 1, 1)
         love.graphics.draw(dojoEndSprite, 0, 0)
         love.graphics.setColor(1, 0, 0)
-        love.graphics.setFont(love.graphics.newFont(48))
+        love.graphics.setFont(fontMenus)
         love.graphics.printf("GAME OVER\nAperte R para reiniciar", 0, 150, 800, "center")
         love.graphics.setColor(1, 1, 1)
         love.graphics.setFont(love.graphics.newFont(24))
