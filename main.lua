@@ -19,12 +19,14 @@ local highScore = 0
 local gameState = "menu" -- menu, jogo, pause
 local x = math.random(100, 700)
 local y = math.random(100, 500)
+local showText = true
 
 function saveHighScore(score)
     love.filesystem.write("highscore.txt", tostring(score))
 end
 
 function resetGame()
+    audGO:stop()
     player = Player.new(400, 300)
     foods = {}
     score = 0
@@ -50,9 +52,18 @@ function love.load()
     logo = love.graphics.newImage("assets/kitchen-kunai-logo.png")
 
     heart = love.graphics.newImage("assets/sprites/gui/heart.png")
+
     dojoSprite = love.graphics.newImage("assets/backgrounds/dojoBackground.jpg")
     dojoMenuSprite = love.graphics.newImage("assets/backgrounds/kk-start.jpg")
-    dojoEndSprite = love.graphics.newImage("assets/background/kk-go.jpg")
+    dojoEndSprite = love.graphics.newImage("assets/backgrounds/kk-go.jpg")
+
+    audGameplay = love.audio.newSource("assets/aud/OST/gameplay.wav", "stream")
+    audGameplay:setVolume(0.10)
+    audGameplay:setLooping(true)
+
+    audGO = love.audio.newSource("assets/aud/OST/gameover.wav", "stream")
+    audGO:setLooping(false)
+    audGO:setVolume(0.05)
 end
 
 function love.keypressed(key)
@@ -71,8 +82,15 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-    if gameState ~= "jogo" then return end
-    if gameOver then return end
+    audGameplay:play()
+    if gameState ~= "jogo" then
+        return 
+    end
+    if gameOver then
+        audGO:play()
+        audGameplay:stop()
+        return
+    end
 
     player:update(dt, buffTimer > 0)
 
@@ -172,8 +190,8 @@ end
 
 function love.draw()
     love.graphics.setColor(1, 1, 1)
-
     if gameState == "menu" then
+        
         love.graphics.draw(dojoMenuSprite, 0, 0)
         love.graphics.setFont(love.graphics.newFont(48))
         love.graphics.draw(
@@ -200,7 +218,7 @@ function love.draw()
     love.graphics.setFont(fontStart)
     love.graphics.draw(heart, 10, 0)
     love.graphics.print(lives, 60, 10)
-    love.graphics.print("PESO " .. score .. "KG", 570, 10)
+    love.graphics.print("PESO " .. score .. "KG", 560, 10)
 
     love.graphics.setColor(0.2, 0.2, 0.2)
     love.graphics.rectangle("fill", 300, 10, 200, 20)
@@ -222,6 +240,7 @@ function love.draw()
     end
 
     if gameOver then
+
         love.graphics.draw(dojoEndSprite, 0, 0)
         love.graphics.setColor(252, 0, 0)
         love.graphics.setFont(fontMenus)
