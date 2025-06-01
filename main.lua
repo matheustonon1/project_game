@@ -218,7 +218,7 @@ function love.draw()
     love.graphics.setFont(fontStart)
     love.graphics.draw(heart, 10, 0)
     love.graphics.print(lives, 60, 10)
-    love.graphics.print("PESO " .. score .. "KG", 560, 10)
+    love.graphics.print("PESO " .. score .. "KG", 555, 10)
 
     love.graphics.setColor(0.2, 0.2, 0.2)
     love.graphics.rectangle("fill", 300, 10, 200, 20)
