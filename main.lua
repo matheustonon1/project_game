@@ -45,11 +45,14 @@ function love.load()
     love.window.setMode(800, 600)
 
     fontStart = love.graphics.newFont("assets/font/start.ttf", 24)
-    fontMenus = love.graphics.newFont("assets/font/menus.ttf", 48 ) 
+    fontMenus = love.graphics.newFont("assets/font/menus.ttf", 76) 
 
+    logo = love.graphics.newImage("assets/kitchen-kunai-logo.png")
+
+    heart = love.graphics.newImage("assets/sprites/gui/heart.png")
     dojoSprite = love.graphics.newImage("assets/backgrounds/dojoBackground.jpg")
     dojoMenuSprite = love.graphics.newImage("assets/backgrounds/kk-start.jpg")
-    dojoEndSprite = love.graphics.newImage("assets/backgrounds/kk-go.jpg")
+    dojoEndSprite = love.graphics.newImage("assets/background/kk-go.jpg")
 end
 
 function love.keypressed(key)
@@ -173,9 +176,14 @@ function love.draw()
     if gameState == "menu" then
         love.graphics.draw(dojoMenuSprite, 0, 0)
         love.graphics.setFont(love.graphics.newFont(48))
-        love.graphics.printf("Ninja Arcade", 0, 200, 800, "center")
+        love.graphics.draw(
+            logo,
+            250, 60,
+            0,
+            0.25, 0.25
+        )
         love.graphics.setFont(fontStart)
-        love.graphics.printf("PRESS ENTER TO START", 0, 300, 800, "center")
+        love.graphics.printf("PRESS ENTER TO START", 0, 450, 800, "center")
         return
     end
 
@@ -189,9 +197,10 @@ function love.draw()
         enemy:draw()
     end
 
-    love.graphics.setFont(love.graphics.newFont(12))
-    love.graphics.print("Peso: " .. score .. "KG", 10, 10)
-    love.graphics.print("Vidas: " .. lives, 10, 30)
+    love.graphics.setFont(fontStart)
+    love.graphics.draw(heart, 10, 0)
+    love.graphics.print(lives, 60, 10)
+    love.graphics.print("PESO " .. score .. "KG", 570, 10)
 
     love.graphics.setColor(0.2, 0.2, 0.2)
     love.graphics.rectangle("fill", 300, 10, 200, 20)
@@ -213,19 +222,19 @@ function love.draw()
     end
 
     if gameOver then
-        love.graphics.setColor(1, 1, 1)
         love.graphics.draw(dojoEndSprite, 0, 0)
-        love.graphics.setColor(1, 0, 0)
+        love.graphics.setColor(252, 0, 0)
         love.graphics.setFont(fontMenus)
-        love.graphics.printf("GAME OVER\nAperte R para reiniciar", 0, 150, 800, "center")
-        love.graphics.setColor(1, 1, 1)
-        love.graphics.setFont(love.graphics.newFont(24))
-        love.graphics.printf("Pontuação máxima: " .. highScore, 0, 320, 800, "center")
+        love.graphics.printf("GAME OVER", 0, 200, 800, "center")
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.setFont(fontStart)
+        love.graphics.printf("PRESS R TO TRY AGAIN", 0, 400, 800, "center")
+
     elseif gameState == "pause" then
         love.graphics.setColor(0, 0, 0, 0.5)
         love.graphics.rectangle("fill", 0, 0, 800, 600)
         love.graphics.setColor(1, 1, 1)
-        love.graphics.setFont(love.graphics.newFont(36))
-        love.graphics.printf("PAUSADO\nPressione P para continuar", 0, 250, 800, "center")
+        love.graphics.setFont(fontStart)
+        love.graphics.printf("PAUSED\n\nPRESS P TO CONTINUE", 0, 250, 800, "center")
     end
 end
