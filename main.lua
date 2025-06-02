@@ -43,6 +43,8 @@ function resetGame()
 end
 
 function love.load()
+    local favicon = love.image.newImageData("assets/favicon.png")
+    love.window.setIcon(favicon)
     love.window.setTitle("Kitchen Kunai")
     love.window.setMode(800, 600)
 
