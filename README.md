@@ -1,64 +1,69 @@
 <div align="center">
 
-<img src="assets/kitchen-kunai-logo.png" alt="Logo do Kitchen Kunai" width="280">
+<img src="versao-nova/assets/kitchen-kunai-logo.png" alt="Logo do Kitchen Kunai" width="280">
 
 <p>
   <img alt="Lua" src="https://img.shields.io/badge/Lua-2C2D72?style=flat-square&logo=lua&logoColor=white">
   <img alt="LÖVE 11.5" src="https://img.shields.io/badge/L%C3%96VE-11.5-E74A99?style=flat-square">
+  <img alt="Duas versões" src="https://img.shields.io/badge/vers%C3%B5es-2-F97316?style=flat-square">
 </p>
 
 </div>
 
-**Kitchen Kunai** é um jogo em que um ninja precisa ganhar peso dentro de um dojo: comer as comidas boas, fugir das estragadas e aguentar os empurrões dos lutadores de sumô.
+**Kitchen Kunai** é um jogo em que um ninja precisa ganhar peso dentro de um dojo: comer as comidas boas, fugir das estragadas e aguentar os lutadores de sumô.
 
-A ideia é inspirada no minijogo [ConSumo](https://youtu.be/ershQOeigTw), do jogo *Bully*.
+A ideia é inspirada no minijogo [ConSumo](https://youtu.be/ershQOeigTw), do jogo *Bully*. O projeto foi desenvolvido para a disciplina de Multimídia, do curso de Engenharia da Computação do Centro Universitário Regional de Espírito Santo do Pinhal.
 
-Foi desenvolvido para a disciplina de Multimídia, do curso de Engenharia da Computação do Centro Universitário Regional de Espírito Santo do Pinhal.
+## Duas versões
 
-## Capturas
+Este repositório guarda o jogo como foi entregue na disciplina e uma versão com o visual refeito depois.
+
+| | [Versão original](versao-original) | [Versão nova](versao-nova) |
+|---|---|---|
+| **Para que serve** | O trabalho como foi entregue | A melhor forma de jogar hoje |
+| **Como rodar** | `KitchenKunai.exe` ou LÖVE | LÖVE 11.5 |
+| **Menus** | Telas com um comando em texto | Menus com opções, como jogar e pausa |
+| **Colisão com lutador** | Empurrão instantâneo | Arremesso animado, girando no ar |
+| **Fim de jogo** | Só o aviso de game over | Peso, recorde, comidas, tempo e título |
+| **Recorde** | Salvo, mas não carregado ao abrir | Salvo e mostrado no menu |
+
+## Antes e depois
 
 <table>
   <tr>
-    <td align="center"><img src="docs/capturas/menu.png" alt="Menu inicial com o logo do jogo"><br><sub>Menu</sub></td>
-    <td align="center"><img src="docs/capturas/jogo.png" alt="Ninja comendo no dojo, com lutadores de sumô ao redor"><br><sub>Partida</sub></td>
+    <th>Original</th>
+    <th>Nova</th>
   </tr>
   <tr>
-    <td align="center"><img src="docs/capturas/dano.png" alt="Tela avermelhada no momento em que o ninja perde uma vida"><br><sub>Perdendo uma vida</sub></td>
-    <td align="center"><img src="docs/capturas/gameover.png" alt="Fim de jogo com o peso final e o aviso de novo recorde"><br><sub>Fim de jogo</sub></td>
+    <td><img src="versao-original/docs/capturas/menu.png" alt="Menu da versão original"></td>
+    <td><img src="versao-nova/docs/capturas/menu.png" alt="Menu da versão nova, com opções e recorde"></td>
+  </tr>
+  <tr>
+    <td><img src="versao-original/docs/capturas/jogo.png" alt="Partida na versão original"></td>
+    <td><img src="versao-nova/docs/capturas/jogo.png" alt="Partida na versão nova, com a HUD refeita"></td>
+  </tr>
+  <tr>
+    <td><img src="versao-original/docs/capturas/pausa.png" alt="Pausa na versão original"></td>
+    <td><img src="versao-nova/docs/capturas/pausa.png" alt="Painel de pausa da versão nova"></td>
+  </tr>
+  <tr>
+    <td><img src="versao-original/docs/capturas/gameover.png" alt="Fim de jogo na versão original"></td>
+    <td><img src="versao-nova/docs/capturas/gameover.png" alt="Fim de jogo da versão nova, com estatísticas"></td>
   </tr>
 </table>
 
 ## Como jogar
 
-| Tecla | Ação |
-|---|---|
-| Setas | Movem o ninja |
-| Enter | Começa a partida |
-| P | Pausa e continua |
-| R | Recomeça depois do fim de jogo |
-
-- **Comidas coloridas** valem 5 KG, fazem o ninja crescer, dão 2 segundos de turbo e enchem a barra de escudo.
-- **Comidas cinzentas** tiram uma vida. Se a barra de escudo tiver carga, só ela é perdida.
-- **Lutadores de sumô** arremessam o ninja para longe e zeram o escudo.
-- **O jogo acelera** conforme o peso aumenta. A partida acaba quando as 3 vidas terminam, e o maior peso fica salvo como recorde.
-
-## Como executar
-
-Instale o [LÖVE 11.5](https://love2d.org/) e, na pasta do projeto, rode:
+Instale o [LÖVE 11.5](https://love2d.org/) e rode a versão que preferir a partir da raiz do repositório:
 
 ```bash
-love .
+love versao-nova
 ```
 
-No Windows, também dá para abrir `Executável/KitchenKunai.exe`. Esse executável é a versão original da disciplina, sem as melhorias visuais mais recentes.
+```bash
+love versao-original
+```
 
-## Estrutura
+No Windows, a versão original também abre direto por `versao-original/Executável/KitchenKunai.exe`.
 
-| Arquivo | Conteúdo |
-|---|---|
-| `main.lua` | Estados do jogo, regras, menus e HUD |
-| `player.lua` | Movimento, animação e dano do ninja |
-| `food.lua` | Comidas boas e ruins |
-| `enemy.lua` | Lutadores de sumô |
-| `fx.lua` | Partículas, textos flutuantes, tremor e clarão de dano |
-| `assets/` | Sprites, cenários, fontes e músicas |
+Os controles e as regras de cada versão estão no README da pasta: [versão original](versao-original#como-jogar) e [versão nova](versao-nova#como-jogar).
