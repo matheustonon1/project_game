@@ -57,6 +57,10 @@ end
 
 
 function Enemy:draw()
+    love.graphics.setColor(0, 0, 0, 0.25)
+    love.graphics.ellipse("fill", self.x + 24, self.y + 45, 16, 5)
+    love.graphics.setColor(1, 1, 1)
+
     local quad = quads[self.direction] and quads[self.direction][self.animationFrame]
     if quad then
         -- Desenha o sprite com escala de 1.5

@@ -1,6 +1,9 @@
+love.graphics.setDefaultFilter("nearest", "nearest")
+
 local Player = require("player")
 local Food = require("food")
 local Enemy = require("enemy")
+local Fx = require("fx")
 
 local enemies = {}
 local enemySpawnTimer = 0
@@ -20,13 +23,50 @@ local gameState = "menu" -- menu, jogo, pause
 local x = math.random(100, 700)
 local y = math.random(100, 500)
 local showText = true
+local newRecord = false
+local animTime = 0
+local fade = 1
+local scorePop = 0
+
+local GOLD = { 1, 0.78, 0.2 }
+local CYAN = { 0.3, 0.85, 1 }
+local RED = { 1, 0.3, 0.25 }
+local GREY = { 0.6, 0.6, 0.6 }
 
 function saveHighScore(score)
     love.filesystem.write("highscore.txt", tostring(score))
 end
 
+local function newVignette()
+    local data = love.image.newImageData(200, 150)
+    data:mapPixel(function(px, py)
+        local dx, dy = (px - 100) / 100, (py - 75) / 75
+        local alpha = math.max(0, math.sqrt(dx * dx + dy * dy) - 0.7) * 0.6
+        return 0.12, 0.05, 0, alpha
+    end)
+    local image = love.graphics.newImage(data)
+    image:setFilter("linear", "linear")
+    return image
+end
+
+local function shadowPrintf(text, y, color)
+    love.graphics.setColor(0, 0, 0, color[4] or 1)
+    love.graphics.printf(text, 3, y + 3, 800, "center")
+    love.graphics.setColor(color)
+    love.graphics.printf(text, 0, y, 800, "center")
+    love.graphics.setColor(1, 1, 1)
+end
+
+local function blink()
+    return 0.7 + 0.3 * math.sin(animTime * 4)
+end
+
 function resetGame()
     audGO:stop()
+    Fx.reset()
+    newRecord = false
+    fade = 1
+    scorePop = 0
     player = Player.new(400, 300)
     foods = {}
     score = 0
@@ -51,10 +91,20 @@ function love.load()
 
     fontStart = love.graphics.newFont("assets/font/start.ttf", 24)
     fontMenus = love.graphics.newFont("assets/font/menus.ttf", 76) 
+    fontMenus:setFilter("linear", "linear")
+    fontLabel = love.graphics.newFont("assets/font/start.ttf", 12)
+    fontFloat = love.graphics.newFont("assets/font/start.ttf", 16)
+    Fx.load(fontFloat)
+
+    love.graphics.setBackgroundColor(0.2, 0.27, 0.45)
+    vignette = newVignette()
+    highScore = tonumber(love.filesystem.read("highscore.txt") or "") or 0
 
     logo = love.graphics.newImage("assets/kitchen-kunai-logo.png")
+    logo:setFilter("linear", "linear")
 
     heart = love.graphics.newImage("assets/sprites/gui/heart.png")
+    heart:setFilter("linear", "linear")
 
     dojoSprite = love.graphics.newImage("assets/backgrounds/dojoBackground.jpg")
     dojoMenuSprite = love.graphics.newImage("assets/backgrounds/kk-start.jpg")
@@ -85,6 +135,9 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
+    animTime = animTime + dt
+    fade = math.max(0, fade - dt / 0.4)
+    scorePop = math.max(0, scorePop - dt)
     audGameplay:play()
     if gameState ~= "jogo" then
         return 
@@ -95,6 +148,7 @@ function love.update(dt)
         return
     end
 
+    Fx.update(dt)
     player:update(dt, buffTimer > 0)
 
     spawnInterval = math.max(0.15, 0.4 - score * 0.002)
@@ -121,6 +175,9 @@ function love.update(dt)
         if player:collidesWith(food) then
             if food.good then
                 score = score + (5 or 10)
+                scorePop = 0.25
+                Fx.burst(food.x, food.y, GOLD, 14)
+                Fx.text(food.x, food.y - 24, "+5 KG", GOLD)
                 player:grow()
                 buffTimer = 2
                 goodFoodMeter = goodFoodMeter + 1
@@ -133,13 +190,20 @@ function love.update(dt)
             else
                 if goodFoodMeter > 0 then
                     goodFoodMeter = 0
+                    Fx.burst(food.x, food.y, CYAN, 14)
+                    Fx.text(food.x, food.y - 24, "ESCUDO!", CYAN)
                 else
                     player:takeDamage() 
                     lives = lives - 1
+                    Fx.damage()
+                    Fx.burst(food.x, food.y, GREY, 14)
+                    Fx.text(food.x, food.y - 24, "-1 VIDA", RED)
                     if lives <= 0 then
                         gameOver = true
+                        fade = 1
                         if score > highScore then
                             highScore = score
+                            newRecord = true
                             saveHighScore(score)
                         end
                     end
@@ -177,8 +241,10 @@ function love.update(dt)
             else
                 if lives <= 0 then
                     gameOver = true
+                    fade = 1
                     if score > highScore then
                         highScore = score
+                        newRecord = true
                         saveHighScore(score)
                     end
                 end
@@ -191,25 +257,122 @@ function love.update(dt)
     end
 end
 
+local function drawMenu()
+    love.graphics.draw(dojoMenuSprite, 0, 0)
+
+    love.graphics.draw(
+        logo,
+        400, 160 + math.sin(animTime * 1.5) * 6,
+        math.sin(animTime * 0.8) * 0.015,
+        0.36, 0.36,
+        512, 512
+    )
+
+    love.graphics.setColor(0, 0, 0, 0.6)
+    love.graphics.rectangle("fill", 0, 552, 800, 48)
+    love.graphics.setColor(1, 1, 1)
+
+    love.graphics.setFont(fontStart)
+    shadowPrintf("PRESS ENTER TO START", 555, { 1, 1, 1, blink() })
+    love.graphics.setFont(fontLabel)
+    local info = "SETAS MOVEM  -  P PAUSA"
+    if highScore > 0 then
+        info = info .. "  -  RECORDE " .. highScore .. " KG"
+    end
+    shadowPrintf(info, 582, GOLD)
+end
+
+local function drawBar(label, y, height, fill, color)
+    love.graphics.setFont(fontLabel)
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.printf(label, 190, y + (height - fontLabel:getHeight()) / 2, 100, "right")
+
+    love.graphics.setColor(0.12, 0.1, 0.1)
+    love.graphics.rectangle("fill", 300, y, 200, height, 3, 3)
+    if fill > 0 then
+        love.graphics.setColor(color)
+        love.graphics.rectangle("fill", 300, y, 200 * fill, height, 3, 3)
+    end
+    love.graphics.setColor(1, 1, 1, 0.8)
+    love.graphics.rectangle("line", 300, y, 200, height, 3, 3)
+    love.graphics.setColor(1, 1, 1)
+end
+
+local function drawHud()
+    love.graphics.setColor(0.07, 0.04, 0.03, 0.8)
+    love.graphics.rectangle("fill", 0, 0, 800, 58)
+    love.graphics.setColor(1, 0.55, 0.1)
+    love.graphics.rectangle("fill", 0, 58, 800, 2)
+
+    for i = 1, 3 do
+        if i <= lives then
+            love.graphics.setColor(1, 1, 1)
+        else
+            love.graphics.setColor(0, 0, 0, 0.45)
+        end
+        love.graphics.draw(heart, 12 + (i - 1) * 40, 9, 0, 0.8, 0.8)
+    end
+
+    drawBar("ESCUDO", 10, 16, goodFoodMeter / goodFoodThreshold, CYAN)
+    drawBar("TURBO", 34, 12, math.max(0, buffTimer) / 2, GOLD)
+
+    love.graphics.setFont(fontStart)
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.printf(score .. " KG", 522, 8, 266, "right")
+    love.graphics.setColor(scorePop > 0 and GOLD or { 1, 1, 1 })
+    love.graphics.printf(score .. " KG", 520, 6, 266, "right")
+
+    love.graphics.setFont(fontLabel)
+    love.graphics.setColor(GOLD)
+    love.graphics.printf("RECORDE " .. math.max(highScore, score) .. " KG", 520, 38, 266, "right")
+    love.graphics.setColor(1, 1, 1)
+end
+
+local function drawGameOver()
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.draw(dojoEndSprite, 0, 0)
+
+    love.graphics.setFont(fontMenus)
+    shadowPrintf("GAME OVER", 120, GOLD)
+
+    love.graphics.setFont(fontStart)
+    shadowPrintf("PESO FINAL: " .. score .. " KG", 240, { 1, 1, 1 })
+    if newRecord then
+        shadowPrintf("NOVO RECORDE!", 285, { GOLD[1], GOLD[2], GOLD[3], blink() })
+    else
+        shadowPrintf("RECORDE: " .. highScore .. " KG", 285, GOLD)
+    end
+    shadowPrintf("PRESS R TO TRY AGAIN", 380, { 1, 1, 1, blink() })
+end
+
+local function drawPause()
+    love.graphics.setColor(0, 0, 0, 0.6)
+    love.graphics.rectangle("fill", 0, 0, 800, 600)
+    love.graphics.setFont(fontMenus)
+    shadowPrintf("PAUSED", 200, GOLD)
+    love.graphics.setFont(fontStart)
+    shadowPrintf("PRESS P TO CONTINUE", 320, { 1, 1, 1, blink() })
+end
+
+local function drawFade()
+    if fade > 0 then
+        love.graphics.setColor(0, 0, 0, fade)
+        love.graphics.rectangle("fill", 0, 0, 800, 600)
+        love.graphics.setColor(1, 1, 1)
+    end
+end
+
 function love.draw()
     love.graphics.setColor(1, 1, 1)
     if gameState == "menu" then
-        
-        love.graphics.draw(dojoMenuSprite, 0, 0)
-        love.graphics.setFont(love.graphics.newFont(48))
-        love.graphics.draw(
-            logo,
-            250, 60,
-            0,
-            0.25, 0.25
-        )
-        love.graphics.setFont(fontStart)
-        love.graphics.printf("PRESS ENTER TO START", 0, 450, 800, "center")
+        drawMenu()
+        drawFade()
         return
     end
 
+    love.graphics.push()
+    Fx.applyShake()
     love.graphics.draw(dojoSprite, 0, 0)
-
     player:draw()
     for _, food in ipairs(foods) do
         food:draw()
@@ -217,46 +380,18 @@ function love.draw()
     for _, enemy in ipairs(enemies) do
         enemy:draw()
     end
+    Fx.draw()
+    love.graphics.pop()
 
-    love.graphics.setFont(fontStart)
-    love.graphics.draw(heart, 10, 0)
-    love.graphics.print(lives, 60, 10)
-    love.graphics.print("PESO " .. score .. " KG", 520, 10)
-
-    love.graphics.setColor(0.2, 0.2, 0.2)
-    love.graphics.rectangle("fill", 300, 10, 200, 20)
-    love.graphics.setColor(0, 0.8, 1)
-    local fillWidth = (goodFoodMeter / goodFoodThreshold) * 200
-    love.graphics.rectangle("fill", 300, 10, fillWidth, 20)
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.rectangle("line", 300, 10, 200, 20)
-
-    if buffTimer > 0 then
-        local maxBuffTime = 2
-        love.graphics.setColor(0.2, 0.2, 0.2)
-        love.graphics.rectangle("fill", 300, 40, 200, 10)
-        love.graphics.setColor(1, 1, 0)
-        local buffWidth = (buffTimer / maxBuffTime) * 200
-        love.graphics.rectangle("fill", 300, 40, buffWidth, 10)
-        love.graphics.setColor(1, 1, 1)
-        love.graphics.rectangle("line", 300, 40, 200, 10)
-    end
+    love.graphics.draw(vignette, 0, 0, 0, 4, 4)
+    Fx.drawFlash()
+    drawHud()
 
     if gameOver then
-
-        love.graphics.draw(dojoEndSprite, 0, 0)
-        love.graphics.setColor(252, 0, 0)
-        love.graphics.setFont(fontMenus)
-        love.graphics.printf("GAME OVER", 0, 200, 800, "center")
-        love.graphics.setColor(255, 255, 255)
-        love.graphics.setFont(fontStart)
-        love.graphics.printf("PRESS R TO TRY AGAIN", 0, 400, 800, "center")
-
+        drawGameOver()
     elseif gameState == "pause" then
-        love.graphics.setColor(0, 0, 0, 0.5)
-        love.graphics.rectangle("fill", 0, 0, 800, 600)
-        love.graphics.setColor(1, 1, 1)
-        love.graphics.setFont(fontStart)
-        love.graphics.printf("PAUSED\n\nPRESS P TO CONTINUE", 0, 250, 800, "center")
+        drawPause()
     end
+
+    drawFade()
 end

@@ -55,6 +55,9 @@ function Food:update(dt)
 end
 
 function Food:draw()
+    love.graphics.setColor(0, 0, 0, 0.25)
+    love.graphics.ellipse("fill", self.x, self.y + 18, 16, 5)
+
     love.graphics.setColor(1, 1, 1)
     local scale = 1.5
     local origin = 16  -- metade do tamanho original 32/2

@@ -109,10 +109,15 @@ function Player:update(dt, isBuffed)
 end
 
 function Player:draw()
+    local scale = 1.5 + self.spritesize
+
+    love.graphics.setColor(0, 0, 0, 0.25)
+    love.graphics.ellipse("fill", self.x, self.y + 8 * scale - 2, 6 * scale, 2 * scale)
+    love.graphics.setColor(1, 1, 1)
+
     if not self.visible then return end -- Só desenha se estiver visível
 
     self.spriteSheet:setFilter("nearest", "nearest")
-    local scale = 1.5 + self.spritesize
     local flip = self.facingLeft and -scale or scale
     local offsetX = self.facingLeft and 16 or 0
 
