@@ -1,2 +1,64 @@
-# Kitchen Kunai
-Criado para fins de estudo e apresentação de trabalho para a matéria de Multimídia.
+<div align="center">
+
+<img src="assets/kitchen-kunai-logo.png" alt="Logo do Kitchen Kunai" width="280">
+
+<p>
+  <img alt="Lua" src="https://img.shields.io/badge/Lua-2C2D72?style=flat-square&logo=lua&logoColor=white">
+  <img alt="LÖVE 11.5" src="https://img.shields.io/badge/L%C3%96VE-11.5-E74A99?style=flat-square">
+</p>
+
+</div>
+
+**Kitchen Kunai** é um jogo em que um ninja precisa ganhar peso dentro de um dojo: comer as comidas boas, fugir das estragadas e aguentar os empurrões dos lutadores de sumô.
+
+A ideia é inspirada no minijogo [ConSumo](https://youtu.be/ershQOeigTw), do jogo *Bully*.
+
+Foi desenvolvido para a disciplina de Multimídia, do curso de Engenharia da Computação do Centro Universitário Regional de Espírito Santo do Pinhal.
+
+## Capturas
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/capturas/menu.png" alt="Menu inicial com o logo do jogo"><br><sub>Menu</sub></td>
+    <td align="center"><img src="docs/capturas/jogo.png" alt="Ninja comendo no dojo, com lutadores de sumô ao redor"><br><sub>Partida</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/capturas/dano.png" alt="Tela avermelhada no momento em que o ninja perde uma vida"><br><sub>Perdendo uma vida</sub></td>
+    <td align="center"><img src="docs/capturas/gameover.png" alt="Fim de jogo com o peso final e o aviso de novo recorde"><br><sub>Fim de jogo</sub></td>
+  </tr>
+</table>
+
+## Como jogar
+
+| Tecla | Ação |
+|---|---|
+| Setas | Movem o ninja |
+| Enter | Começa a partida |
+| P | Pausa e continua |
+| R | Recomeça depois do fim de jogo |
+
+- **Comidas coloridas** valem 5 KG, fazem o ninja crescer, dão 2 segundos de turbo e enchem a barra de escudo.
+- **Comidas cinzentas** tiram uma vida. Se a barra de escudo tiver carga, só ela é perdida.
+- **Lutadores de sumô** empurram o ninja e zeram o escudo.
+- **O jogo acelera** conforme o peso aumenta. A partida acaba quando as 3 vidas terminam, e o maior peso fica salvo como recorde.
+
+## Como executar
+
+Instale o [LÖVE 11.5](https://love2d.org/) e, na pasta do projeto, rode:
+
+```bash
+love .
+```
+
+No Windows, também dá para abrir `Executável/KitchenKunai.exe`. Esse executável é a versão original da disciplina, sem as melhorias visuais mais recentes.
+
+## Estrutura
+
+| Arquivo | Conteúdo |
+|---|---|
+| `main.lua` | Estados do jogo, regras, menus e HUD |
+| `player.lua` | Movimento, animação e dano do ninja |
+| `food.lua` | Comidas boas e ruins |
+| `enemy.lua` | Lutadores de sumô |
+| `fx.lua` | Partículas, textos flutuantes, tremor e clarão de dano |
+| `assets/` | Sprites, cenários, fontes e músicas |
