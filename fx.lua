@@ -41,8 +41,12 @@ function Fx.text(x, y, text, color)
     table.insert(texts, { x = x, y = y, text = text, color = color, life = 0.8 })
 end
 
-function Fx.damage()
+function Fx.shake()
     shakeTimer = SHAKE_DURATION
+end
+
+function Fx.damage()
+    Fx.shake()
     flashTimer = FLASH_DURATION
 end
 

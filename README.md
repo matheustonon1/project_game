@@ -39,7 +39,7 @@ Foi desenvolvido para a disciplina de Multimídia, do curso de Engenharia da Com
 
 - **Comidas coloridas** valem 5 KG, fazem o ninja crescer, dão 2 segundos de turbo e enchem a barra de escudo.
 - **Comidas cinzentas** tiram uma vida. Se a barra de escudo tiver carga, só ela é perdida.
-- **Lutadores de sumô** empurram o ninja e zeram o escudo.
+- **Lutadores de sumô** arremessam o ninja para longe e zeram o escudo.
 - **O jogo acelera** conforme o peso aumenta. A partida acaba quando as 3 vidas terminam, e o maior peso fica salvo como recorde.
 
 ## Como executar

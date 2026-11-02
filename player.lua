@@ -1,6 +1,13 @@
 local Player = {}
 Player.__index = Player
 
+local KNOCK_DURATION = 0.55
+local KNOCK_SPEED = 1320
+local KNOCK_FRICTION = 6
+local KNOCK_HEIGHT = 60
+local KNOCK_SPINS = 2
+local SQUASH_DURATION = 0.15
+
 function Player.new(x, y)
     local self = setmetatable({}, Player)
     self.x = x
@@ -23,6 +30,14 @@ function Player.new(x, y)
     self.blinkTimer = 0
     self.visible = true
 
+    -- Arremesso ao colidir com um lutador
+    self.knockTimer = 0
+    self.knockVX = 0
+    self.knockVY = 0
+    self.knockSpin = 1
+    self.squashTimer = 0
+    self.landed = false
+
     local spriteWidth, spriteHeight = 16, 16
     for i = 0, 9 do
         self.quads[i] = love.graphics.newQuad(i * spriteWidth, 0, spriteWidth, spriteHeight, self.spriteSheet:getDimensions())
@@ -36,7 +51,12 @@ function Player:update(dt, isBuffed)
     local moveSpeed = self.speed * buffMultiplier / (self.size / 30)
     local moving = false
 
-    if love.keyboard.isDown("up") then
+    self.squashTimer = math.max(0, self.squashTimer - dt)
+
+    if self:isFlying() then
+        self:updateKnockback(dt)
+        self.direction = "idle"
+    elseif love.keyboard.isDown("up") then
         self.y = self.y - moveSpeed * dt
         self.direction = "up"
         moving = true
@@ -108,17 +128,62 @@ function Player:update(dt, isBuffed)
 
 end
 
+function Player:isFlying()
+    return self.knockTimer > 0
+end
+
+function Player:knockback(nx, ny)
+    self.knockTimer = KNOCK_DURATION
+    self.knockVX = nx * KNOCK_SPEED
+    self.knockVY = ny * KNOCK_SPEED
+    self.knockSpin = nx < 0 and -1 or 1
+end
+
+function Player:updateKnockback(dt)
+    self.knockTimer = self.knockTimer - dt
+    self.x = self.x + self.knockVX * dt
+    self.y = self.y + self.knockVY * dt
+
+    local friction = math.exp(-KNOCK_FRICTION * dt)
+    self.knockVX = self.knockVX * friction
+    self.knockVY = self.knockVY * friction
+
+    -- Quica nas paredes em vez de parar seco
+    if self.x < self.size / 2 or self.x > 800 - self.size / 2 then
+        self.knockVX = -self.knockVX * 0.6
+    end
+    if self.y < self.size / 2 or self.y > 600 - self.size / 2 then
+        self.knockVY = -self.knockVY * 0.6
+    end
+
+    if self.knockTimer <= 0 then
+        self.knockTimer = 0
+        self.squashTimer = SQUASH_DURATION
+        self.landed = true
+    end
+end
+
 function Player:draw()
     local scale = 1.5 + self.spritesize
+    local lift, angle = 0, 0
 
+    if self:isFlying() then
+        local progress = 1 - self.knockTimer / KNOCK_DURATION
+        lift = math.sin(progress * math.pi) * KNOCK_HEIGHT
+        angle = (1 - (1 - progress) ^ 2) * KNOCK_SPINS * math.pi * 2 * self.knockSpin
+    end
+
+    local shadowSize = 1 - lift / KNOCK_HEIGHT * 0.5
     love.graphics.setColor(0, 0, 0, 0.25)
-    love.graphics.ellipse("fill", self.x, self.y + 8 * scale - 2, 6 * scale, 2 * scale)
+    love.graphics.ellipse("fill", self.x, self.y + 8 * scale - 2, 6 * scale * shadowSize, 2 * scale * shadowSize)
     love.graphics.setColor(1, 1, 1)
 
     if not self.visible then return end -- Só desenha se estiver visível
 
     self.spriteSheet:setFilter("nearest", "nearest")
-    local flip = self.facingLeft and -scale or scale
+    -- Achata um pouco ao tocar o chão
+    local squash = 1 + 0.3 * (self.squashTimer / SQUASH_DURATION)
+    local flip = (self.facingLeft and -scale or scale) * squash
     local offsetX = self.facingLeft and 16 or 0
 
     if self.invulnerable then
@@ -131,10 +196,10 @@ function Player:draw()
         self.spriteSheet,
         self.quads[self.currentFrame],
         self.x,
-        self.y,
-        0,
+        self.y - lift,
+        angle,
         flip,
-        scale,
+        scale / squash,
         8,
         8
     )

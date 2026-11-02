@@ -95,9 +95,7 @@ function Enemy:pushPlayer(player)
     end
 
     local nx, ny = dx / distance, dy / distance
-    local knockbackStrength = 13000
-    player.x = player.x + nx * knockbackStrength * love.timer.getDelta()
-    player.y = player.y + ny * knockbackStrength * love.timer.getDelta()
+    player:knockback(nx, ny)
 end
 
 return Enemy

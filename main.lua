@@ -32,6 +32,7 @@ local GOLD = { 1, 0.78, 0.2 }
 local CYAN = { 0.3, 0.85, 1 }
 local RED = { 1, 0.3, 0.25 }
 local GREY = { 0.6, 0.6, 0.6 }
+local DUST = { 1, 1, 1 }
 
 function saveHighScore(score)
     love.filesystem.write("highscore.txt", tostring(score))
@@ -151,6 +152,11 @@ function love.update(dt)
     Fx.update(dt)
     player:update(dt, buffTimer > 0)
 
+    if player.landed then
+        player.landed = false
+        Fx.burst(player.x, player.y + 16, DUST, 10)
+    end
+
     spawnInterval = math.max(0.15, 0.4 - score * 0.002)
     spawnTimer = spawnTimer + dt
 
@@ -234,8 +240,10 @@ function love.update(dt)
         local enemy = enemies[i]
         enemy:update(dt)
 
-        if enemy:collidesWith(player) then
+        if not player:isFlying() and enemy:collidesWith(player) then
             enemy:pushPlayer(player)
+            Fx.shake()
+            Fx.burst(player.x, player.y, DUST, 18)
             if goodFoodMeter > 0 then
                 goodFoodMeter = 0
             else
