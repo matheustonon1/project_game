@@ -12,7 +12,7 @@
 
 **Kitchen Kunai** é um jogo em que um ninja precisa ganhar peso dentro de um dojo: comer as comidas boas, fugir das estragadas e aguentar os lutadores de sumô.
 
-A ideia é inspirada no minijogo [ConSumo](https://youtu.be/ershQOeigTw), do jogo *Bully*. O projeto foi desenvolvido para a disciplina de Multimídia, do curso de Engenharia da Computação do Centro Universitário Regional de Espírito Santo do Pinhal.
+A ideia é inspirada no minijogo [ConSumo](https://youtu.be/ershQOeigTw), do jogo *Bully*. O projeto foi desenvolvido para a disciplina de Multimídia, do curso de Engenharia da Computação do Centro Regional Universitário de Espírito Santo do Pinhal.
 
 ## Duas versões
 

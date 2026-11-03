@@ -16,7 +16,7 @@
 
 A ideia é inspirada no minijogo [ConSumo](https://youtu.be/ershQOeigTw), do jogo *Bully*.
 
-Foi desenvolvido para a disciplina de Multimídia, do curso de Engenharia da Computação do Centro Universitário Regional de Espírito Santo do Pinhal.
+Foi desenvolvido para a disciplina de Multimídia, do curso de Engenharia da Computação do Centro Regional Universitário de Espírito Santo do Pinhal.
 
 ## Capturas
 
