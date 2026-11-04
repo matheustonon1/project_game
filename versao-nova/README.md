@@ -50,7 +50,9 @@ Foi desenvolvido para a disciplina de Multimídia, do curso de Engenharia da Com
 
 ## Como executar
 
-Instale o [LÖVE 11.5](https://love2d.org/) e, nesta pasta, rode:
+No Windows, baixe o zip na [última Release](https://github.com/matheustonon1/project_game/releases/latest), extraia o arquivo inteiro e abra `KitchenKunai.exe`. O `.exe` precisa ficar na mesma pasta das DLLs.
+
+Em qualquer sistema, instale o [LÖVE 11.5](https://love2d.org/) e, nesta pasta, rode:
 
 ```bash
 love .

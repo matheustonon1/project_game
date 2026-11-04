@@ -47,7 +47,7 @@ Foi desenvolvido para a disciplina de Multimídia, do curso de Engenharia da Com
 
 ## Como executar
 
-No Windows, abra `Executável/KitchenKunai.exe`.
+No Windows, abra `Executável/KitchenKunai.exe`. O `.exe` precisa ficar na mesma pasta das DLLs.
 
 Em qualquer sistema, instale o [LÖVE 11.5](https://love2d.org/) e, nesta pasta, rode:
 

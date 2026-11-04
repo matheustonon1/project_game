@@ -21,7 +21,7 @@ Este repositório guarda o jogo como foi entregue na disciplina e uma versão co
 | | [Versão original](versao-original) | [Versão nova](versao-nova) |
 |---|---|---|
 | **Para que serve** | O trabalho como foi entregue | A melhor forma de jogar hoje |
-| **Como rodar** | `KitchenKunai.exe` ou LÖVE | LÖVE 11.5 |
+| **Como rodar** | `KitchenKunai.exe` ou LÖVE | [Download para Windows](https://github.com/matheustonon1/project_game/releases/latest) ou LÖVE 11.5 |
 | **Menus** | Telas com um comando em texto | Menus com opções, como jogar e pausa |
 | **Colisão com lutador** | Empurrão instantâneo | Arremesso animado, girando no ar |
 | **Fim de jogo** | Só o aviso de game over | Peso, recorde, comidas, tempo e título |
@@ -54,7 +54,9 @@ Este repositório guarda o jogo como foi entregue na disciplina e uma versão co
 
 ## Como jogar
 
-Instale o [LÖVE 11.5](https://love2d.org/) e rode a versão que preferir a partir da raiz do repositório:
+No Windows, baixe o zip da versão nova na [última Release](https://github.com/matheustonon1/project_game/releases/latest), extraia o arquivo inteiro e abra `KitchenKunai.exe`.
+
+Em qualquer sistema, instale o [LÖVE 11.5](https://love2d.org/) e rode a versão que preferir a partir da raiz do repositório:
 
 ```bash
 love versao-nova
